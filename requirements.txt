@@ -1,0 +1,4 @@
+flask
+pillow
+tensorflow
+cassandra-driver
