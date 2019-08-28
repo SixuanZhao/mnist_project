@@ -11,9 +11,10 @@ handler = logging.StreamHandler()
 handler.setFormatter(logging.Formatter("%(asctime)s [%(levelname)s] %(name)s: %(message)s"))
 log.addHandler(handler)
 
+cluster = Cluster(contact_points=['172.18.0.2'],port=9042)
+session = cluster.connect()
+
 def createKeySpace():
-        cluster = Cluster(contact_points=['127.0.0.1'],port=9042)
-        session = cluster.connect()
 
         log.info("Creating keyspace...")
         try:
@@ -46,8 +47,6 @@ def createKeySpace():
 
 
 def insert_data(name,upload_time,result):
-        cluster = Cluster(contact_points=['127.0.0.1'], port=9042)
-        session = cluster.connect()
         session.execute("USE %s"%keyspace)
         session.execute('''
         INSERT INTO newtable (pic_name, upload_time, result) VALUES (%s,%s,%s)
@@ -55,8 +54,6 @@ def insert_data(name,upload_time,result):
 
 
 def test():
-        cluster = Cluster(contact_points=['127.0.0.1'], port=9042)
-        session = cluster.connect()
         session.execute("USE %s" %keyspace)
         results=session.execute("SELECT * FROM newtable")
         for i in results:
@@ -64,8 +61,6 @@ def test():
 
 
 def delete():
-        cluster = Cluster(contact_points=['127.0.0.1'], port=9042)
-        session = cluster.connect()
         try:
             session.execute("USE %s" %keyspace)
             session.execute("DROP TABLE newtable")
